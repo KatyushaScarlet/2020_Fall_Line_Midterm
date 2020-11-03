@@ -1,0 +1,1 @@
+umsWebApi = 'https://asia-east2-chatbot-108aea008.cloudfunctions.net/user-'

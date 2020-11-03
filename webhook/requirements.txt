@@ -1,0 +1,2 @@
+line-bot-sdk==1.16.0
+dialogflow==1.0.0
