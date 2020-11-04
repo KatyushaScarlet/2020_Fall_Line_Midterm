@@ -20,26 +20,39 @@ node = data.get("XML_Head")
 node = node.get("Infos")
 node = node.get("Info")
 
+# solve null and None problem
+def transform(input):
+    output = str(input)
+    if(output == "None"):
+        output = ""
+    elif(output == "null"):
+        output = ""
+
+    return output
+
+
 index = 0
 for item in node:
     index += 1
     spot = SpotModel()
-    # spot.id=item.get("Id")
+    # spot.id=transform(item.get("Id"))
     spot.id=str(index)
-    spot.name=item.get("Name")
-    spot.description=item.get("Description")
-    spot.detail=item.get("Toldescribe")
-    spot.phone=item.get("Tel")
-    spot.address=item.get("Add")
-    spot.zipcode=item.get("Zipcode")
-    spot.city=item.get("Region")
-    spot.town=item.get("Town")
-    spot.ticket=item.get("Ticketinfo")
-    spot.remark=item.get("Remarks")
-    spot.time=item.get("Opentime")
+    spot.name=transform(item.get("Name"))
+    spot.description=transform(item.get("Description"))
+    spot.detail=transform(item.get("Toldescribe"))
+    spot.phone=transform(item.get("Tel"))
+    spot.address=transform(item.get("Add"))
+    spot.zipcode=transform(item.get("Zipcode"))
+    spot.city=transform(item.get("Region"))
+    spot.town=transform(item.get("Town"))
+    spot.ticket=transform(item.get("Ticketinfo"))
+    spot.remark=transform(item.get("Remarks"))
+    spot.time=transform(item.get("Opentime"))
 
     # print(spot.name)
     result = spots_dataset.document(spot.id).set(spot.__dict__)
     print("add %d item success" % index)
     print("info :\n%s" % result)
     # break
+
+

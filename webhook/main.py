@@ -140,9 +140,9 @@ def handle_message(event):
             
             if(count > 1):
                 # 查询到多条结果，显示前N个，
-                limit = 10
+                limit = 10 if count > 10 else count
                 spots = response.result[:limit]
-                response_text += "查詢到 {n} 條結果，顯示前 {l} 條：\n".format(n=str(count),l=str(limit))
+                response_text += "查詢到 {n} 條結果，顯示前 {l} 條：\n\n".format(n=str(count),l=str(limit))
                 for item in spots:
                     spot = myModel.SpotModel()
                     spot.__dict__ = item
@@ -152,20 +152,46 @@ def handle_message(event):
 
             elif(count == 1):
                 # 查询到一条结果，显示详细信息
+                spot = myModel.SpotModel()
+                spot.__dict__ = response.result[0]
+
+                # 优先取address，若为空则取city+town
+                address = spot.address if spot.address != "" else spot.city + spot.town
+
+                response_text += "查詢結果：\n"
+                response_text += "\n"   
+                response_text += "景點序號：{}\n".format(spot.id)
+                response_text += "景點名稱：{}\n".format(spot.name)
+                response_text += "景點簡介：{}\n".format(spot.description)
+                response_text += "景點地址：{}\n".format(address)
+                response_text += "開放時間：{}\n".format(spot.time)
+                response_text += "聯係方式：{}\n".format(spot.phone)
+                response_text += "購票信息：{}\n".format(spot.ticket)
+                response_text += "重要提醒：{}\n".format(spot.remark)
                 pass
 
             elif(count == 0):
                 # 查询不到
+                response_text += "很抱歉，沒有找到相關資訊"
                 pass
 
             else:
-                pass
                 # 查询出错
+                response_text += "錯誤：\n"
+                response_text += str(response.result)
+                pass
             
             texts.append(response_text)
             replyMessageToUser(event.reply_token,texts)
             return
+        elif (dialogflowModel.actionName == "bookTicket"):
+            # 订票
+            
+            pass
+        elif (dialogflowModel.actionName == "checkOrder"):
+            # 查看订单
 
+            pass
         else:
             # 原代码
             if (dialogflowModel.actionName == 'update'):
