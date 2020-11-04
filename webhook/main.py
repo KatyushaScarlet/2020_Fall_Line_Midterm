@@ -125,7 +125,7 @@ def handle_message(event):
         response = myModel.ResponseModel()
         response_text = ""
         texts = []
-        if ("querySpotVia" in dialogflowModel.actionName):
+        if ("querySpotVia" in actionName):
             #查询类
             spotRetrieveModel = myModel.SpotRetrieveModel() 
 
@@ -197,11 +197,11 @@ def handle_message(event):
             replyMessageToUser(event.reply_token,texts)
             return
 
-        elif (dialogflowModel.actionName == "bookTicket"):
+        elif (actionName == "bookTicket"):
             # 订票
             # 查询用户是否注册
             actionName = "checkUser"
-            userCheck = myModel.CheckModel()
+            userCheck = myModel.UserCheckModel()
             userCheck.lineId = dialogflowModel.lineId
             result = callWebApi(actionName,userCheck)
 
@@ -239,8 +239,11 @@ def handle_message(event):
             replyMessageToUser(event.reply_token,texts)
             return
 
-        elif (dialogflowModel.actionName == "checkOrder"):
+        elif (actionName == "checkOrder"):
             # 查看订单
+            
+
+
 
             pass
         else:

@@ -52,6 +52,6 @@ class UserModel():
         self.lineId = None
         self.role = None
 
-class CheckModel():
+class UserCheckModel():
     def __init__(self):
         self.lineId = None
