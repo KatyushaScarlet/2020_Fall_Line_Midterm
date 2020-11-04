@@ -53,9 +53,9 @@ def callWebApi(actionName,request_input):
     if ("querySpotVia" in actionName):
         # spotId
         url = spotApi + "retrieve"
-        result = requests.post(url,json=request_input.__dict__)
+        json_request = request_input.__dict__
+        result = requests.post(url,json=json_request)
 
-    print(result.text)
     return result
 
 
@@ -110,6 +110,9 @@ def handle_message(event):
         # 用event.reply_token和dialogflowModel.responses直接调用replyMessageToUser
 
         actionName = dialogflowModel.actionName
+        response = myModel.ResponseModel()
+        response_text = ""
+        texts = []
         if ("querySpotVia" in dialogflowModel.actionName):
             #查询类
             spotRetrieveModel = myModel.SpotRetrieveModel() 
@@ -117,22 +120,51 @@ def handle_message(event):
             if (actionName == "querySpotViaId"):
                 # 通过id查询
                 spotRetrieveModel.id = dialogflowModel.parameters["spotId"]
+
             elif (actionName == "querySpotViaName"):
                 # 通过名称查询
                 spotRetrieveModel.name = dialogflowModel.parameters["spotName"] 
+
             elif (actionName == "querySpotViaAddress"):
                 # 通过地址查询
                 spotRetrieveModel.address = dialogflowModel.parameters["spotAddress"]
+
             else:
                 print("No method handle:" + actionName)
                 pass
 
             # call web api
             result = callWebApi(actionName,spotRetrieveModel)
+            response.__dict__ = json.loads(result.text)
+            count = int(response.status)
+            
+            if(count > 1):
+                # 查询到多条结果，显示前N个，
+                limit = 10
+                spots = response.result[:limit]
+                response_text += "查詢到 {n} 條結果，顯示前 {l} 條：\n".format(n=str(count),l=str(limit))
+                for item in spots:
+                    spot = myModel.SpotModel()
+                    spot.__dict__ = item
+                    response_text += "{id}. {name}\n".format(id=spot.id,name=spot.name)
+                pass
 
-            pass
 
+            elif(count == 1):
+                # 查询到一条结果，显示详细信息
+                pass
 
+            elif(count == 0):
+                # 查询不到
+                pass
+
+            else:
+                pass
+                # 查询出错
+            
+            texts.append(response_text)
+            replyMessageToUser(event.reply_token,texts)
+            return
 
         else:
             # 原代码

@@ -5,7 +5,7 @@ import json
 
 from firebase_admin import credentials, firestore, initialize_app
 
-from model import Spots
+from model import SpotModel
 
 cred = credentials.Certificate('firebase-key.json')
 initialize_app(cred)
@@ -23,22 +23,23 @@ node = node.get("Info")
 index = 0
 for item in node:
     index += 1
-    spots = Spots()
-    # spots.id=item.get("Id")
-    spots.id=str(index)
-    spots.name=item.get("Name")
-    spots.description=item.get("Description")
-    spots.detail=item.get("Toldescribe")
-    spots.phone=item.get("Tel")
-    spots.address=item.get("Add")
-    spots.zipcode=item.get("Zipcode")
-    spots.city=item.get("Region")
-    spots.town=item.get("Town")
-    spots.ticket=item.get("Ticketinfo")
-    spots.remark=item.get("Remarks")
+    spot = SpotModel()
+    # spot.id=item.get("Id")
+    spot.id=str(index)
+    spot.name=item.get("Name")
+    spot.description=item.get("Description")
+    spot.detail=item.get("Toldescribe")
+    spot.phone=item.get("Tel")
+    spot.address=item.get("Add")
+    spot.zipcode=item.get("Zipcode")
+    spot.city=item.get("Region")
+    spot.town=item.get("Town")
+    spot.ticket=item.get("Ticketinfo")
+    spot.remark=item.get("Remarks")
+    spot.time=item.get("Opentime")
 
-    # print(spots.name)
-    result = spots_dataset.document(spots.id).set(spots.__dict__)
+    # print(spot.name)
+    result = spots_dataset.document(spot.id).set(spot.__dict__)
     print("add %d item success" % index)
     print("info :\n%s" % result)
     # break

@@ -1,14 +1,14 @@
-class Spots():
-    def __init__(self,id=None,name=None,description=None,detail=None,phone=None,address=None,zipcode=None,city=None,town=None,ticket=None,remark=None):
-        self.id = id
-        self.name = name
-        self.description = description
-        self.detail=detail
-        self.phone=phone
-        self.address=address
-        self.zipcode=zipcode
-        self.city=city
-        self.town=town
-        self.ticket=ticket
-        self.remark=remark
-
+class SpotModel():
+    def __init__(self):
+        self.id = None
+        self.name = None
+        self.description = None
+        self.detail = None
+        self.phone = None
+        self.address = None
+        self.zipcode = None
+        self.city = None
+        self.town = None
+        self.ticket = None
+        self.remark = None
+        self.time = None

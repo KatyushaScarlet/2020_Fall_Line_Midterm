@@ -24,6 +24,7 @@ class SpotModel():
         self.town = None
         self.ticket = None
         self.remark = None
+        self.time = None
 
 class OrderRequestMode():
     def __init__(self):

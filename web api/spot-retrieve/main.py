@@ -29,7 +29,7 @@ def retrieve(request):
     elif request_args and "id" in request_args:
         id = request_args["id"]
     else:
-        id = ""
+        id = None
 
     # name
     if request_json and "name" in request_json:
@@ -37,7 +37,7 @@ def retrieve(request):
     elif request_args and "name" in request_args:
         name = request_args["name"]
     else:
-        name = ""
+        name = None
 
     # address
     if request_json and "address" in request_json:
@@ -45,7 +45,7 @@ def retrieve(request):
     elif request_args and "address" in request_args:
         address = request_args["address"]
     else:
-        address = ""
+        address = None
 
     # 测试用参数
     # id = "1000"
@@ -53,11 +53,11 @@ def retrieve(request):
     # address = None
 
     # debug
-    # print(request_json)
-    # print("%s,%s,%s" % (type(id),type(name),type(address)))
-    # print("%s,%s,%s" % (str(id),str(name),str(address)))
+    print(request_json)
+    print("%s,%s,%s" % (type(id),type(name),type(address)))
+    print("%s,%s,%s" % (str(id),str(name),str(address)))
 
-    if(id != ""):
+    if((id != "") and (not id is None)):
         # 根据id精确查找
         spot = spots_ref.document(id).get().to_dict()
         result = []
@@ -72,7 +72,7 @@ def retrieve(request):
             response.status = "0"
             response.result = "未找到相關資料"
         
-    elif(name != ""):
+    elif((name != "") and (not name is None)):
         # 根据名称查找
 
         # 取出所有
@@ -88,7 +88,7 @@ def retrieve(request):
         response.status = len(result)
         response.result = result
     
-    elif(address != ""):
+    elif((address != "") and (not address is None)):
         # 根据地址查找
         # 取出所有
         spots = [spot.to_dict() for spot in spots_ref.stream()]

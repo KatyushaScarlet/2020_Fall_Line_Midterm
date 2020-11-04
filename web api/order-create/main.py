@@ -37,7 +37,7 @@ def create(request):
     elif request_args and "userid" in request_args:
         userid = request_args["userid"]
     else:
-        userid = ""
+        userid = None
 
     # spotid
     if request_json and "spotid" in request_json:
@@ -45,14 +45,14 @@ def create(request):
     elif request_args and "spotid" in request_args:
         spotid = request_args["spotid"]
     else:
-        spotid = ""
+        spotid = None
     # count
     if request_json and "count" in request_json:
         count = request_json["count"]
     elif request_args and "count" in request_args:
         count = request_args["count"]
     else:
-        count = ""
+        count = None
 
     # debug
     # userid = "0123456789"
@@ -63,7 +63,7 @@ def create(request):
     pass
 
     # 根据userid查找user
-    if(userid != ""):
+    if((userid != "")and(not userid is None)):
         user = users_ref.document(userid).get().to_dict()
 
         if(user != None):
@@ -81,7 +81,7 @@ def create(request):
         return response.__dict__
 
     # 根据spotid查找spot
-    if(spotid != ""):
+    if((spotid != "")and(not spotid is None)):
         spot = spots_ref.document(spotid).get().to_dict()
 
         if(spot != None):
@@ -99,7 +99,10 @@ def create(request):
         return response.__dict__
 
     # count 为空则默认为1
-    order.count = count if count != "" else "1"
+    if((count != "")and(not count is None)):
+        order.count = count
+    else:
+        order.count = "1"
 
     # 新增订单
     orders_ref.document(orderid).set(order.__dict__)
