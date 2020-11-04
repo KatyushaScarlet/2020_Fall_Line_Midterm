@@ -66,9 +66,9 @@
 【检查用户是否注册】user-check
 
 {
-    "lineid":"line id"
+    "lineId":"line id"
 }
 
-已注册返回1
+已注册返回1和用户信息
 未注册返回0
 条件缺失返回-1
