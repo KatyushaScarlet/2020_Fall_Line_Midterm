@@ -8,7 +8,7 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import FollowEvent, TextSendMessage, MessageEvent, TextMessage
 from umsConfig import umsWebApi
 
-from spotConfig import spotApi, orderApi, userApi
+from myConfig import spotApi, orderApi, userApi
 import myModel
 
 # web server for debug
@@ -51,10 +51,22 @@ def actionDispatch():
 def callWebApi(actionName,request_input):
     # 根据action不同，传入参数不同，调用不同的web api
     if ("querySpotVia" in actionName):
-        # spotId
+        # query spot
         url = spotApi + "retrieve"
-        json_request = request_input.__dict__
-        result = requests.post(url,json=json_request)
+
+    elif(actionName == "checkUser"):
+        # check user
+        url = userApi + "check"
+
+    elif(actionName == "bookTicket"):
+        # book ticket
+        url = orderApi + "create"
+
+    else:
+        Exception()
+
+    json_request = request_input.__dict__
+    result = requests.post(url,json=json_request) 
 
     return result
 
@@ -184,10 +196,49 @@ def handle_message(event):
             texts.append(response_text)
             replyMessageToUser(event.reply_token,texts)
             return
+
         elif (dialogflowModel.actionName == "bookTicket"):
             # 订票
-            
-            pass
+            # 查询用户是否注册
+            actionName = "checkUser"
+            userCheck = myModel.CheckModel()
+            userCheck.lineId = dialogflowModel.lineId
+            result = callWebApi(actionName,userCheck)
+
+            response.__dict__ = json.loads(result.text)
+            count = int(response.status)
+
+            if(count == 1):
+                # 用户已注册
+                actionName = "bookTicket"
+                user = myModel.UserModel()
+                user.__dict__ = response.result
+                # 创建订票请求
+                orderCreateModel = myModel.OrderCreateModel()
+                orderCreateModel.userid = user.phone
+                orderCreateModel.spotid = dialogflowModel.parameters["spotId"]
+                orderCreateModel.count = dialogflowModel.parameters["count"]
+                # 订票
+                result = callWebApi(actionName,orderCreateModel)
+                response.__dict__ = json.loads(result.text)
+                status = int(response.status)
+
+                if(status == 1):
+                    # 訂票成功
+                    response_text += "訂票成功！"
+                else:
+                    # 訂票失敗
+                    response_text += "訂票失敗：\n"
+                    response_text += str(response.result)
+
+            else:
+                # 用户未注册
+                response_text += "請先注冊"
+
+            texts.append(response_text)
+            replyMessageToUser(event.reply_token,texts)
+            return
+
         elif (dialogflowModel.actionName == "checkOrder"):
             # 查看订单
 

@@ -3,6 +3,14 @@ class ResponseModel():
         self.status = -1
         self.result = None
 
+class UserModel():
+    def __init__(self):
+        self.name = None
+        self.phone = None
+        self.email = None
+        self.lineId = None
+        self.role = None
+
 class SpotModel():
     def __init__(self):
         self.id = None
@@ -17,14 +25,6 @@ class SpotModel():
         self.ticket = None
         self.remark = None
         self.time = None
-
-class OrderModel():
-    def __init__(self):
-        self.id = None
-        self.user = None
-        self.spot = None
-        self.count = None
-        self.datetime = None
 
 class SpotRetrieveModel():
     def __init__(self):
@@ -43,3 +43,15 @@ class OrderCreateModel():
         self.userid = None
         self.spotid = None
         self.count = None
+
+class UserModel():
+    def __init__(self):
+        self.name = None
+        self.phone = None
+        self.email = None
+        self.lineId = None
+        self.role = None
+
+class CheckModel():
+    def __init__(self):
+        self.lineId = None
