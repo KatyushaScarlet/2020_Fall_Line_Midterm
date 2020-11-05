@@ -9,7 +9,8 @@ class UserModel():
         self.phone = None
         self.email = None
         self.lineId = None
-        self.role = "customer"
+        self.role = None
+        self.password = None
 
 class SpotModel():
     def __init__(self):

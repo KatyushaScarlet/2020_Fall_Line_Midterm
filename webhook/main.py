@@ -62,6 +62,10 @@ def callWebApi(actionName,request_input):
         # book ticket
         url = orderApi + "create"
 
+    elif(actionName == "checkOrder"):
+        # check order
+        url = orderApi + "retrieve"
+
     else:
         Exception()
 
@@ -125,7 +129,7 @@ def handle_message(event):
         response = myModel.ResponseModel()
         response_text = ""
         texts = []
-        if ("querySpotVia" in actionName):
+        if ("querySpotVia" in dialogflowModel.actionName):
             #查询类
             spotRetrieveModel = myModel.SpotRetrieveModel() 
 
@@ -154,7 +158,7 @@ def handle_message(event):
                 # 查询到多条结果，显示前N个，
                 limit = 10 if count > 10 else count
                 spots = response.result[:limit]
-                response_text += "查詢到 {n} 條結果，顯示前 {l} 條：\n\n".format(n=str(count),l=str(limit))
+                response_text += "查詢到 {n} 條結果，顯示前 {l} 條：\n".format(n=str(count),l=str(limit))
                 for item in spots:
                     spot = myModel.SpotModel()
                     spot.__dict__ = item
@@ -197,7 +201,7 @@ def handle_message(event):
             replyMessageToUser(event.reply_token,texts)
             return
 
-        elif (actionName == "bookTicket"):
+        elif (dialogflowModel.actionName == "bookTicket" or dialogflowModel.actionName == "checkOrder"):
             # 订票
             # 查询用户是否注册
             actionName = "checkUser"
@@ -210,26 +214,56 @@ def handle_message(event):
 
             if(count == 1):
                 # 用户已注册
-                actionName = "bookTicket"
                 user = myModel.UserModel()
                 user.__dict__ = response.result
-                # 创建订票请求
-                orderCreateModel = myModel.OrderCreateModel()
-                orderCreateModel.userid = user.phone
-                orderCreateModel.spotid = dialogflowModel.parameters["spotId"]
-                orderCreateModel.count = dialogflowModel.parameters["count"]
-                # 订票
-                result = callWebApi(actionName,orderCreateModel)
-                response.__dict__ = json.loads(result.text)
-                status = int(response.status)
+                
+                if(dialogflowModel.actionName == "bookTicket"):
+                    # 订票流程
+                    actionName = "bookTicket"
+                    # 创建订票请求
+                    orderCreateModel = myModel.OrderCreateModel()
+                    orderCreateModel.userid = user.phone
+                    orderCreateModel.spotid = dialogflowModel.parameters["spotId"]
+                    orderCreateModel.count = dialogflowModel.parameters["count"]
+                    # 订票
+                    result = callWebApi(actionName,orderCreateModel)
+                    response.__dict__ = json.loads(result.text)
+                    status = int(response.status)
 
-                if(status == 1):
-                    # 訂票成功
-                    response_text += "訂票成功！"
+                    if(status == 1):
+                        # 訂票成功
+                        response_text += "訂票成功！"
+                    else:
+                        # 訂票失敗
+                        response_text += "訂票失敗：\n"
+                        response_text += str(response.result)
+
+                elif(dialogflowModel.actionName == "checkOrder"):
+                    # 查询订单流程
+                    actionName = "checkOrder"
+                    # 创建查询请求
+                    orderRetrieveModel = myModel.OrderRetrieveModel()
+                    orderRetrieveModel.userid = user.phone
+                    # 查询
+                    result = callWebApi(actionName,orderRetrieveModel)
+                    response.__dict__ = json.loads(result.text)
+                    count = int(response.status)
+
+                    if (count > 0):
+                        orders = response.result
+
+                        response_text += "找到 {} 條記錄：\n".format(count)
+                        for item in orders:
+                            order = myModel.OrderModel()
+                            order.__dict__ = item
+                            response_text += "[{}]{} - {}張票\n".format(order.datetime,order.spot.get("name"),round(order.count))
+                    elif (count == 0):
+                        response_text += "未找到訂單記錄"
+                    else:
+                        response_text += "错误：\n"
+                        response_text += response.result
                 else:
-                    # 訂票失敗
-                    response_text += "訂票失敗：\n"
-                    response_text += str(response.result)
+                    pass
 
             else:
                 # 用户未注册
@@ -239,13 +273,11 @@ def handle_message(event):
             replyMessageToUser(event.reply_token,texts)
             return
 
-        elif (actionName == "checkOrder"):
-            # 查看订单
-            
-
-
-
-            pass
+        # elif (actionName == "checkOrder"):
+        #     # 查看订单
+        #     orderRetrieveModel = myModel.OrderRetrieveModel()
+        #     orderRetrieveModel.userid = 
+        #     pass
         else:
             # 原代码
             if (dialogflowModel.actionName == 'update'):

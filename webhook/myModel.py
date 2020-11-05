@@ -44,6 +44,14 @@ class OrderCreateModel():
         self.spotid = None
         self.count = None
 
+class OrderModel():
+    def __init__(self):
+        self.id = None
+        self.user = None
+        self.spot = None
+        self.count = None
+        self.datetime = None
+
 class UserModel():
     def __init__(self):
         self.name = None

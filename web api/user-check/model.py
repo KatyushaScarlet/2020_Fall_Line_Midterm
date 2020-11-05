@@ -10,6 +10,7 @@ class UserModel():
         self.email = None
         self.lineId = None
         self.role = None
+        self.password = None
 
 class CheckModel():
     def __init__(self):

@@ -50,7 +50,7 @@ def retrieve(request):
     else:
         spotid = ""
 
-    if(orderid != ""):
+    if((orderid != "") and (not orderid is None)):
         # 根据订单id查找
         order = orders_ref.document(orderid).get().to_dict()
 
@@ -62,8 +62,7 @@ def retrieve(request):
             # 返回未找到
             response.status = "0"
             response.result = "未找到相關資料"
-
-    elif(userid != ""):
+    elif((userid != "") and (not userid is None)):
         # 根据用户id查找
 
         # 取出所有
@@ -78,8 +77,7 @@ def retrieve(request):
         # 返回结果条数和结果
         response.status = len(result)
         response.result = result
-
-    elif(spotid != ""):
+    elif((spotid != "") and (not spotid is None)):
         # 根据景点id查找:
 
         # 取出所有

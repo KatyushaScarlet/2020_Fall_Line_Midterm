@@ -98,11 +98,14 @@ def create(request):
         response.result = "請輸入景點"
         return response.__dict__
 
-    # count 为空则默认为1
-    if((count != "")and(not count is None)):
-        order.count = count
-    else:
-        order.count = "1"
+    # 判断count是否合法
+    order.count = count if count != None else "-1"
+    order.count = count if count != "" else "-1"
+    if(int(order.count) < 1):
+        # 返回不合法
+        response.status = "-1"
+        response.result = "請輸正確的訂票數"
+        return response.__dict__
 
     # 新增订单
     orders_ref.document(orderid).set(order.__dict__)
