@@ -1,0 +1,111 @@
+{% extends "www/Layout.html" %}
+{% block title %}查詢結果{% endblock %}
+{% block content %}
+<div class="text-center">
+    {% if count > 1 %}
+        <h1 class="display-4">查詢到 {{count}} 個景點</h1>
+    {% elif count == 1 %}
+        <h1 class="display-4">查詢到 1 個景點</h1>
+    {% else %}
+        <h1 class="display-4">沒有查詢到任何景點</h1>
+    {% endif %}
+</div>
+<div>
+    {% if count > 1 %}
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th class="text-nowrap">名稱</th>
+                <th>地點</th>
+                <th class="text-nowrap">價格</th>
+                <th class="text-nowrap">詳情</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for spot in spotList %}
+            <tr>
+                <td>{{spot.id}}</td>
+                <td>{{spot.name}}</td>
+
+                {% if spot.address == "" %}
+                <td>{{spot.city}}{{spot.town}}</td>
+                {% else %}
+                <td>{{spot.address}}</td>
+                {% endif %}
+
+                {% if "免" in spot.ticket or spot.ticket == "" %}
+                <td>免費</td>
+                {% else %}
+                <td>{{spot.price}}</td>
+                {% endif %}
+
+                <td><a href="/SpotRetrieve?queryText={{spot.id}}&queryType=id">詳情</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% elif count == 1 %}
+    <table class="table table-hover ">
+        <thead>
+            <tr>
+                <th class="text-nowrap">詳細信息</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>景點序號</td>
+                <td>{{spotList[0].id}}</td>
+            </tr>
+            <tr>
+                <td>景點名稱</td>
+                <td>{{spotList[0].name}}</td>
+            </tr>
+            <tr>
+                <td>景點簡介</td>
+                {% if spotList[0].detail == "" %}
+                <td>{{spotList[0].description}}</td>
+                {% else %}
+                <td>{{spotList[0].detail}}</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td>景點地址</td>
+                {% if spotList[0].address == "" %}
+                <td>{{spotList[0].city}}{{spotList[0].town}}</td>
+                {% else %}
+                <td>{{spotList[0].address}}</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td>開放時間</td>
+                <td>{{spotList[0].time}}</td>
+            </tr>
+            <tr>
+                <td>聯係方式</td>
+                <td>{{spotList[0].phone}}</td>
+            </tr>
+            <tr>
+                <td>購票信息</td>
+                {% if "免" in spotList[0].ticket or spotList[0].ticket == "" %}
+                <td>免費</td>
+                {% else %}
+                <td>{{spotList[0].price}}</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td>重要提醒</td>
+                <td>{{spotList[0].remark}}</td>
+            </tr>  
+        </tbody>
+    </table>
+
+
+    {% else %}
+    <div class="text-center">
+        <a type="button" class="btn btn-primary" href="/">返回首頁</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

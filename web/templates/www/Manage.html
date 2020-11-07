@@ -1,0 +1,32 @@
+{% extends "www/Layout.html" %}
+{% block title %}管理{% endblock %}
+{% block content %}
+<div class="text-center">
+    <h1 class="display-4">管理</h1>
+    <p>查看所有訂單</p>
+</div>
+<div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class="text-nowrap">下單時間</th>  
+                <th class="text-nowrap">用戶</th>
+                <th class="text-nowrap">手機</th>
+                <th class="text-nowrap">景點</th>
+                <th class="text-nowrap">訂票數</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orderList %}
+            <tr>
+                <td>{{order.datetime}}</td>
+                <td>{{order.user.get("name")}}</td>
+                <td>{{order.user.get("phone")}}</td>
+                <td>{{order.spot.get("name")}}</td>
+                <td>{{order.count}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

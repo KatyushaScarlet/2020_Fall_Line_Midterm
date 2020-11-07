@@ -1,0 +1,31 @@
+{% extends "www/Layout.html" %}
+{% block title %}首頁{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-6 offset-3">
+        <h1 class="display-4 text-center">查詢景點</h1>
+        <form action="/SpotRetrieve" method="GET">
+            <div class="form-group">
+                <label>關鍵詞：</label>
+                <input type="text" class="form-control" placeholder="國立國父紀念館" name="queryText" required>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="queryType" value="name" checked>查詢名稱
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="queryType" value="address">查詢地區
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="queryType" value="id">查詢序號
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary">查詢</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

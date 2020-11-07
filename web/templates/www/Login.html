@@ -1,0 +1,29 @@
+{% extends "www/Layout.html" %}
+{% block title %}登入{% endblock %}
+{% block content %}
+<div class="text-center">
+  <div class="row">
+    <div class="col-4 offset-4">
+      <h1 class="display-4">登入</h1>
+      <div class="text-left">
+        <form action="/Login" method="POST">
+          <div class="form-group">
+            <label for="phone">手機號:</label>
+            <input type="phone" class="form-control" placeholder="請輸入手機號" name="phone" required>
+          </div>
+          <div class="form-group">
+            <label for="password">密碼:</label>
+            <input type="password" class="form-control" placeholder="請輸入密碼" name="password" required>
+          </div>
+          <div class="form-group form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="checkbox" name="remember"> 記住用戶 
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary">登入</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

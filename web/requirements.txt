@@ -1,0 +1,11 @@
+Flask
+Flask-Security
+Flask-Security-Too
+Flask-SQLAlchemy
+pylint-flask-sqlalchemy
+argon2_cffi
+google-oauth
+google-auth
+pymysql
+firebase_admin
+requests
