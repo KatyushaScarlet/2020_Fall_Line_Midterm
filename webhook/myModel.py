@@ -10,6 +10,7 @@ class UserModel():
         self.email = None
         self.lineId = None
         self.role = None
+        self.password = None
 
 class SpotModel():
     def __init__(self):
@@ -63,3 +64,4 @@ class UserModel():
 class UserCheckModel():
     def __init__(self):
         self.lineId = None
+        self.phone = None

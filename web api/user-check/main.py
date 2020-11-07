@@ -29,8 +29,18 @@ def check(request):
     else:
         lineId = None
 
+    # phone
+    if request_json and "phone" in request_json:
+        phone = request_json["phone"]
+    elif request_args and "phone" in request_args:
+        phone = request_args["phone"]
+    else:
+        phone = None
+
     # 测试用参数
-    # lineId = "Uedef6a810f69246dc30b3c15afdcb2f4"
+    # # lineId = "Uedef6a810f69246dc30b3c15afdcb2f4"
+    # lineId= ""
+    # phone = "0983172719"
 
     if((lineId != "") and (not lineId is None)):
         # 根据lineid查找
@@ -49,7 +59,25 @@ def check(request):
         else:
             response.status = "0"
             response.result = "未找到用戶資料"
-    
+
+    elif((phone != "") and (not phone is None)):
+        # 根据phone查找
+        # 取出所有
+        users = [item.to_dict() for item in users_ref.stream()]
+        result = []
+
+        # 查找phone相同的
+        for item in users:
+            if(str(item.get("phone")) == phone):
+                result.append(item)
+
+        if(len(result)!=0):
+            response.status = "1"
+            response.result = result[0]
+        else:
+            response.status = "0"
+            response.result = "未找到用戶資料"
+
     else:
         # 返回错误
         response.status = "-1"

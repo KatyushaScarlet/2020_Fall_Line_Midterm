@@ -5,6 +5,17 @@ import json
 from model import UserModel,SpotModel,OrderModel,ResponseModel
 import time
 import uuid
+# get utc+8 time
+from tzlocal import get_localzone
+from datetime import datetime, timezone, timedelta
+
+def utc_8():
+    utc_now = datetime.utcnow().replace(tzinfo=timezone.utc)
+    obj = utc_now.astimezone(timezone(timedelta(hours=8)))
+    obj = datetime(obj.year, obj.month, obj.day, obj.hour, obj.minute, obj.second, obj.microsecond)
+    zone = get_localzone()
+    
+    return obj.strftime("%Y-%m-%d %H:%M:%S")
 
 # data model
 user = UserModel()
@@ -59,7 +70,7 @@ def create(request):
     # spotid = "1"
     # order.count = "2"
 
-    order.datetime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    order.datetime = utc_8()
     pass
 
     # 根据userid查找user

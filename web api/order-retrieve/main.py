@@ -94,9 +94,19 @@ def retrieve(request):
         response.result = result
 
     else:
-        # 返回错误
-        response.status = "-1"
-        response.result = "请输入查找条件"
+        # 返回所有订单
+
+        # 取出所有
+        orders = [order.to_dict() for order in orders_ref.stream()]
+        result = []
+
+        for item in orders:
+            result.append(item)
+            
+
+        # 返回结果条数和结果
+        response.status = len(result)
+        response.result = result
 
     # 返回结果
     print("response: " + str(response.status))

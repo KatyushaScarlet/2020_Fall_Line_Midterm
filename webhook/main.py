@@ -21,11 +21,11 @@ dialogflowModel = model.DialogflowModel()
 userModel = model.UserModel()
 
 # web server for debug
-app = Flask(__name__)
+# app = Flask(__name__)
 
-@app.route("/")
-def index():
-    return "this is index"
+# @app.route("/")
+# def index():
+#     return "this is index"
 
 
 # (1) functions
@@ -84,9 +84,11 @@ def replyMessageToUser(replyToken, texts):
 
 
 # (2) Webhook
-@app.route("/webhook",methods=['GET', 'POST'])
-# def lineWebhook(request):
-def lineWebhook():
+# for flask
+# @app.route("/webhook",methods=['GET', 'POST'])
+# def lineWebhook():
+def lineWebhook(request):
+
     # get X-Line-Signature header value
     signature = request.headers.get('X-Line-Signature')
 
@@ -313,5 +315,5 @@ def handle_message(event):
     replyMessageToUser(event.reply_token, dialogflowModel.responses)
 
 
-if __name__ == "__main__":
-    app.run(debug = True, host = "0.0.0.0")
+# if __name__ == "__main__":
+#     app.run(debug = True, host = "0.0.0.0")
